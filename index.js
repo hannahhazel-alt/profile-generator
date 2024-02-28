@@ -4,9 +4,9 @@ const fs = require("fs");
 const generateTeam = require("./src/page-template.js");
 
 // lib modules
-const Engineer = require("./lib/Engineer");
-const Intern = require("./lib/Intern");
-const Manager = require("./lib/Manager");
+const Engineer = require("./lib/Engineer.js");
+const Intern = require("./lib/Intern.js");
+const Manager = require("./lib/Manager.js");
 
 // Array for answers to questions
 const newStaffMemberData = [];
@@ -39,89 +39,89 @@ const questions = async () => {
     ])
 
 
-    
-    //  console.log(answers);
-      // if manager selected, answer these specific question
-      if (answers.role === "Manager") {
-        const managerAns = await inquirer
-          .prompt([
-            {
-              type: "input",
-              message: "What is your office number",
-              name: "officeNumber",
-            },
-          ])
-          const newManager = new Manager(
-            answers.name,
-            answers.id,
-            answers.email,
-            managerAns.officeNumber
-          );
-          newStaffMemberData.push(newManager);
-          
-        // if engineer selected answer these set of questions
-      } else if (answers.role === "Engineer") {
-        const githubAns = await inquirer
-          .prompt([
-            {
-              type: "input",
-              message: "What is your GitHub user name?",
-              name: "github",
-            }
-          ])
-            const newEngineer = new Engineer(
-              answers.name,
-              answers.id,
-              answers.email,
-              githubAns.github
-            );
-            newStaffMemberData.push(newEngineer);
-          
-        // if intern selected answer these set of questions
-      } else if (answers.role === "Intern") {
-        const internAns = await inquirer
-          .prompt([
-            {
-              type: "input",
-              message: "What university did you attend?",
-              name: "school",
-            },
-          ])
-          
-          const newIntern = new Intern(
-            answers.name,
-            answers.id,
-            answers.email,
-            internAns.school
-          );
-          newStaffMemberData.push(newIntern);          
-      } 
+
+  //  console.log(answers);
+  // if manager selected, answer these specific question
+  if (answers.role === "Manager") {
+    const managerAns = await inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "What is your office number",
+          name: "officeNumber",
+        },
+      ])
+    const newManager = new Manager(
+      answers.name,
+      answers.id,
+      answers.email,
+      managerAns.officeNumber
+    );
+    newStaffMemberData.push(newManager);
+
+    // if engineer selected answer these set of questions
+  } else if (answers.role === "Engineer") {
+    const githubAns = await inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "What is your GitHub user name?",
+          name: "github",
+        }
+      ])
+    const newEngineer = new Engineer(
+      answers.name,
+      answers.id,
+      answers.email,
+      githubAns.github
+    );
+    newStaffMemberData.push(newEngineer);
+
+    // if intern selected answer these set of questions
+  } else if (answers.role === "Intern") {
+    const internAns = await inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "What university did you attend?",
+          name: "school",
+        },
+      ])
+
+    const newIntern = new Intern(
+      answers.name,
+      answers.id,
+      answers.email,
+      internAns.school
+    );
+    newStaffMemberData.push(newIntern);
+  }
 
 }; //end of questions function
 
 async function promptQuestions() {
   await questions()
-    
-  
+
+
   const addMemberAns = await inquirer
     .prompt([
       {
-        name:'addMember',
+        name: 'addMember',
         type: 'list',
         choices: ['Add a new member', 'Create team'],
         message: "What would you like to do next?"
       }
     ])
 
-    if (addMemberAns.addMember === 'Add a new member') {
-      return promptQuestions()
-    }
-    return createTeam();
-}  
+  if (addMemberAns.addMember === 'Add a new member') {
+    return promptQuestions()
+  }
+  return createTeam();
+}
 
 promptQuestions();
 
-function createTeam () {
+function createTeam() {
   console.log("new guy", newStaffMemberData)
   fs.writeFileSync(
     "./output/index.html",
